@@ -23,11 +23,15 @@ def download_file(filepath):
 
 @app.route('/<path:filepath>', methods=["DELETE"])
 def delete_file(filepath):
+    if not os.path.exists(filepath): # проверяем, существует ли вообще такой путь на диске
+        return "Файл или папка не найдены", 404 
     os.remove(filepath)
     return "Файл успешно удалён\n", 200
 
 @app.route('/<path:filepath>', methods=["GET","HEAD"])
 def info_or_download_file(filepath):
+    if not os.path.exists(filepath): # проверяем, существует ли вообще такой путь на диске
+        return "Файл или папка не найдены", 404 
     if os.path.isdir(filepath): #проверяем, папка ли это
         files = os.listdir(filepath) # Если это GET запрос к папке, получаем список файлов
         return jsonify(files) # Превращаем список в JSON и возвращаем
